@@ -23,6 +23,7 @@ if(!empty($_GET["user"])){
 
 $stats = json_decode($file);
 
+
 //var_dump($stats->stats->kits);
 var_dump(json_decode($file));
 ?>

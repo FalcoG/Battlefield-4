@@ -15,25 +15,33 @@ function imagettftextcenter($image, $font_size, $angle, $x, $y, $color, $font, $
 }
 
 function serviceStarProgress($image, $font_size, $angle, $x, $y, $color, $font, $string, $class){
-    global $grey;
-    imagettftext($image, $font_size, $angle, $x, $y, $color, $font, $string);
-    imagerectangle($image, $x-50, $y-19, $x+50, $y+5, $grey);
-
-    $serviceStar = imagecreatefrompng("images/servicestar-18x18.png");
-    imagecopy($image, $serviceStar, $x-20, $y-16, 0, 0, 18, 18);
+    global $grey, $stats, $orange;
+    imagerectangle($image, $x-51, $y-19, $x+51, $y+5, $grey);
 
     $kit = imagecreatefrompng("images/kit-icons-small.png");
+    $serviceStar = imagecreatefrompng("images/servicestar-18x18.png");
+    $progress = 0;
     if($class == "assault") {
-        imagecopy($image, $kit, $x -90, $y-22, 0, 0, 32, 32);
+        $progress = (($stats->stats->kits->$class->score/155000) - $stats->stats->kits->$class->stars) * 100;
+        $kit_x = 0;
     }else if($class == "engineer") {
-        imagecopy($image, $kit, $x -90, $y-22, 32, 0, 32, 32);
+        $progress = (($stats->stats->kits->$class->score/131000) - $stats->stats->kits->$class->stars) * 100;
+        $kit_x = 32;
     }else if($class == "support") {
-        imagecopy($image, $kit, $x -90, $y-22, 64, 0, 32, 32);
+        $progress = (($stats->stats->kits->$class->score/134000) - $stats->stats->kits->$class->stars) * 100;
+        $kit_x = 64;
     }else if($class == "recon") {
-        imagecopy($image, $kit, $x -90, $y-22, 96, 0, 32, 32);
+        $progress = (($stats->stats->kits->$class->score/104000) - $stats->stats->kits->$class->stars) * 100;
+        $kit_x = 96;
     }else if($class == "commander") {
-        imagecopy($image, $kit, $x -90, $y-22, 128, 0, 32, 32);
+        $progress = (($stats->stats->kits->$class->score/20000) - $stats->stats->kits->$class->stars) * 100;
+        $kit_x = 128;
     }
+
+    imagefilledrectangle($image, $x-50, $y-18, $x-50+$progress, $y+4, $orange);
+    imagecopy($image, $serviceStar, $x-20, $y-16, 0, 0, 18, 18);
+    imagecopy($image, $kit, $x -90, $y-22, $kit_x, 0, 32, 32);
+    imagettftext($image, $font_size, $angle, $x, $y, $color, $font, $string);
 }
 
 function time_elapsed_string($timestamp, $full = false) {
@@ -64,4 +72,3 @@ function time_elapsed_string($timestamp, $full = false) {
     if (!$full) $string = array_slice($string, 0, 1);
     return $string ? implode(', ', $string) . ' ago' : 'just now';
 }
-?>
