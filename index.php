@@ -10,14 +10,20 @@
 <body>
 
 <img src="profile.php">
+<img src="profile.php?type=infantry">
 
 <?php
-$file = file_get_contents("http://api.bf4stats.com/api/playerInfo?plat=pc&name=I_EAT_TANKS&output=json");
-//$file = file_get_contents("playerInfo.json");
+if(!empty($_GET["user"])){
+    $username = $_GET["user"];
+    $file = file_get_contents("http://api.bf4stats.com/api/playerInfo?plat=pc&name=" . $username . "&output=json");
+}else{
+    $file = file_get_contents("playerInfo.json");
+    $username = "I_EAT_TANKS";
+}
+
 $stats = json_decode($file);
 
-echo $stats->player->id;
-
+//var_dump($stats->stats->kits);
 var_dump(json_decode($file));
 ?>
 </body>
